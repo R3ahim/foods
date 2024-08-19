@@ -5,13 +5,13 @@ import ExploreMenu from '../../components/ExploreMenu/ExploreMenu'
 import FoodDisplay from '../../components/FoodDisplay/FoodDisplay'
 
 const Home = () => {
-    const [catergory,setCatergory]= useState('All');
+    const [category,setcategory]= useState('All');
 
   return (
     <div>
         <Header/>
-        <ExploreMenu catergory={catergory} setCatergory={setCatergory}  />
-        <FoodDisplay catergory={catergory}/>
+        <ExploreMenu category={category} setcategory={setcategory}  />
+        <FoodDisplay category={category}/>
     </div>
   )
 }

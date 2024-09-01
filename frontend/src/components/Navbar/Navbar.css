@@ -140,6 +140,9 @@
     .pt {
         font-size: 18px;
     }
+    /* .ser{
+        display: none;
+    } */
 
 }
 
@@ -149,6 +152,9 @@
   
     .navbar-menu{
      display: none;
+    }
+    .ser{
+        display: none;
     }
   
  

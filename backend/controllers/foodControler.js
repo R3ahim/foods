@@ -38,7 +38,19 @@ const listFood = async (req,res) =>{
         res.json({success:false,message:("Eroror")})
      }
 }
+const foodDetails = async(req,res)=>{
+    const id = req.params.id;
 
+      try {
+        const order = await foodModel.findById({_id:id});
+        res.json({success:true,data:order})
+        console.log(id)
+      } catch (error) {
+        console.log(error)
+        res.json({success:false,message:'eoror are looking me'})
+        
+      }
+    }
 
 const removeFood = async(req,res)=>{
        try{
@@ -54,4 +66,4 @@ const removeFood = async(req,res)=>{
 }
 
 
-export {addFood,listFood,removeFood} 
+export {addFood,listFood,removeFood,foodDetails} 

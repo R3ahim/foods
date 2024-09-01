@@ -81,6 +81,22 @@ export const assets = {
     bag_icon,
     parcel_icon
 }
+export const sauceOrder = [
+    {name:"Addition meat 80g",price:6,id:1},
+    {name:"Extra Cheese",price:5,id:2},
+    {name:"Fata Cheese",price:6,id:3},
+    {name:"Black Olives",price:4,id:4},
+    {name:"Green Olives",price:9,id:5},
+    {name:"jalapeno Olives",price:4,id:6},
+]
+export const moreExtra = [
+    {name:"garlic sauce ",price:6,id:1},
+    {name:"Mild Suace",price:5,id:2},
+    {name:"Ketcup",price:6,id:3},
+    {name:"hot sauce",price:4,id:4},
+    {name:"BBQ sauce",price:9,id:5},
+    {name:"dill sauce",price:4,id:6},
+]
 
 export const menu_list = [
     {
@@ -123,7 +139,29 @@ export const food_list = [
         image: food_1,
         price: 12,
         description: "Food provides essential nutrients for overall health and well-being",
-        category: "Salad"
+        category: "Salad",
+        sizes:[
+            {id:'1',size:'Small',price: 12},
+            {id:'2',size:'Midcore',price:16},
+            {id:'3',size:'Large',price:19},
+
+        ],
+        meats:[
+            {id:'1',name:'Checken Meat',price:0},
+            {id:'2',name:'lamb meat',price:0},
+            {id:'3',name:'Mixed Meat',price:0},
+
+        ],
+        sauces:[
+            {id:'1',name:'garlic Suace',price:0},
+            {id:'2',name:'Mild suace',price:0},
+            {id:'3',name:'ketcup',price:0},
+            {id:'4',name:'hot suace',price:0},
+            {id:'5',name:'BBQ suace',price:0},
+            {id:'6',name:'dill suace',price:0},
+
+        ],
+
     },
     {
         _id: "2",

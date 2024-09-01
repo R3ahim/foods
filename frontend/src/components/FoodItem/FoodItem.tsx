@@ -2,9 +2,12 @@ import React, { useContext } from 'react'
 import './FoodItem.css'
 import { assets } from '../../assets/assets'
 import { StoreContext } from '../context/StoreContext';
+import { Link } from 'react-router-dom';
 const FoodItem = ({id,name,price,image,description}) => {
 
 const {cartItems,addToCart,removeFromCart,url} = useContext(StoreContext)
+console.log(cartItems[id])
+console.log(id)
 
   return (
     
@@ -16,7 +19,7 @@ const {cartItems,addToCart,removeFromCart,url} = useContext(StoreContext)
              : <div  className="food-item-counter">
               <img onClick={()=>removeFromCart(id)} src={assets.remove_icon_red} alt="" />
               <p>{cartItems[id]}</p>
-              <img  onClick={()=>addToCart(id)} src={assets.add_icon_green} alt="" />
+      <img  onClick={()=>addToCart(id)} src={assets.add_icon_green} alt="" /> 
              </div>
                 
             }
@@ -24,7 +27,7 @@ const {cartItems,addToCart,removeFromCart,url} = useContext(StoreContext)
         <div className="food-item-info">
             <div className="food-item-name-rating">
                 <p>{name}</p>
-                <img src={assets.rating_starts} alt="" />
+                <Link to={'/ordering/' +id}><img src={assets.rating_starts} alt="" /></Link>
             </div>
             <p className='food-item-desc'>{description}</p>
             <p className="food-item-price">${price}</p>

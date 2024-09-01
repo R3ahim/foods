@@ -8,7 +8,9 @@ import StoreContextProvider from './components/context/StoreContext.tsx'
 createRoot(document.getElementById('root')!).render(
 <BrowserRouter>
 <StoreContextProvider>
+
 <App />
+
 </StoreContextProvider>
 </BrowserRouter>
   ,

@@ -6,6 +6,7 @@ import {assets} from '../../assets/assets.js'
 
 const Orders = ({url}) => {
   const [orders,setOrders] = useState([]);
+  console.log(orders)
   const fetchAllOrders = async ()=>{
    
     const response = await axios.get(url + '/api/order/list')
@@ -19,6 +20,17 @@ const Orders = ({url}) => {
       toast.error("Erorr")
     }
   }
+  const statusHandler = async(event,orderId) =>{
+    const response = await axios.post(url+"/api/order/status",{
+      orderId,
+      status:event.target.value
+    })
+    if (response.data.success) {
+      await fetchAllOrders();
+      
+    }
+  }
+
   useEffect(()=>{
     fetchAllOrders();
   },[])
@@ -45,15 +57,17 @@ const Orders = ({url}) => {
                   </p>
                   <p className="order-item-name">{order.address.firstName + " " + order.address.lastName}</p>
                   <div className="order-item-address">
-                    <p>{order.address.street+ " "}</p>
+                    <p>{order.address.street+ " ,"}</p>
                     <p>{order.address.city+ ", " + order.address.state+ "," + order.address.country+", " + order.address.zipcode}</p>
                   </div>
                   <p className="order-item-phone">{order.address.phone}</p>
+                 <p >Status:    {order.payment === true?<span style={{color:"green"}}> Paid</span>:<span style={{color:'red'}}>Not Paid</span>}</p>
 
+             
                 </div>
-                <p>Items : {order.items.lenght}</p>
+                <p>Items : {order.items.length}</p>
                  <p>PLN {order.amount}</p>
-                 <select>
+                 <select onChange={(event)=>statusHandler(event,order._id)} value={order.status}>
                   <option value="Food Processing">Food Processing</option>
                   <option value="Out for deliver">Out for deliver</option>
                   <option value="Delivered">Delivered</option>

@@ -9,14 +9,14 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 // placing user order for frontend 
 
 const placeOrder = async(req,res) =>{
-    const frontend_url = 'http://localhost:5173'
+    const frontend_url = 'https://deltakababb.netlify.app'
 
    try {
        const newOrder = new orderModel({
         userId:req.body.userId,
         items:req.body.items,
         amount:req.body.amount,
-        address:req.body.address
+        address:req.body.address,
        })
        await newOrder.save();
        await userModel.findByIdAndUpdate(req.body.userId,{cartData:{}});
@@ -110,7 +110,25 @@ const listOrders = async (req,res) =>{
 }
 
 
-export {placeOrder,verifyOrder,userOrders,listOrders};
+
+// api for updating order status
+
+const updateStatus = async (req,res)=>{
+try {
+  await orderModel.findByIdAndUpdate(req.body.orderId,{status:req.body.status});
+  res.json({success:true,message:"status Updated"})
+
+} catch (error) {
+  console.log(error);
+  res.json({success:false,message:'error'})
+  
+  
+}
+
+}
+
+
+export {placeOrder,verifyOrder,userOrders,listOrders,updateStatus};
 
 
 // video on 8:51:44

@@ -17,7 +17,7 @@ const App = () => {
     
   const [locationData, setLocationData] = useState("");
   const [error, setError] = useState('');
-  const apiKey = 'AlzaSyaAUk87UCy5a3q-1EVnJiZ7rVqiFLIg9Jy'; // Replace with your actual API key
+  const apiKey = 'AlzaSyA7UQZQt7hNtZVNuN7Lr_BWl0VBtB4EW4C'; // Replace with your actual API key
     
   const handleLocateMe = () => {
     if (navigator.geolocation) {

@@ -20,7 +20,7 @@ const Cart = () => {
       const address1 = 'Jodłowa 11A, 83-110 Tczew, Poland'
       // const address1 = 'Jodłowa 11A, 83-110 Tczew, Poland'
     
-      const apiKey = 'AlzaSyWMmJ-uap0dRFirhJRC-oJKskLf5cywXaL'; // Replace with your actual API key
+      const apiKey = 'AlzaSyA7UQZQt7hNtZVNuN7Lr_BWl0VBtB4EW4C'; // Replace with your actual API key
       const fullAddress = street+','+ house + ',' + city;
     
       const calculateDistance = async () => {

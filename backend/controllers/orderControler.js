@@ -9,8 +9,13 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 // placing user order for frontend 
 
 const placeOrder = async(req,res) =>{
-    const frontend_url = 'https://deltakababb.netlify.app'
+    const frontend_url = 'http://localhost:5173'
+    const paymentMethod = req.body.address.method;
+    
 
+    console.log('paymentMethod',paymentMethod)
+
+    
    try {
        const newOrder = new orderModel({
         userId:req.body.userId,
@@ -18,16 +23,21 @@ const placeOrder = async(req,res) =>{
         amount:req.body.amount,
         address:req.body.address,
        })
+       
+
+       console.log(req.body.items)
        await newOrder.save();
        await userModel.findByIdAndUpdate(req.body.userId,{cartData:{}});
        
        const line_items = req.body.items.map((item)=>({
+              //  const extraSum = req.body.items.extra.reduce((acc, item) => acc + item.price * item.quanity, 0)
+      //  const sauceSum = req.body.items.extraSauce.reduce((acc, item) => acc + item.price * item.quanity, 0)
         price_data:{
          currency:"pln",
          product_data:{
-             name:item.name,   
+             name:item.name + '||'+ 'Extras + Sauce',   
          },
-         unit_amount:item.price*100 
+         unit_amount: item.extra.reduce((acc, item) => acc + item.price * item.quanity, 0) * 100 + item.extraSauce.reduce((acc, item) => acc + item.price * item.quanity, 0) * 100 +item.sizePrice*100 
         },
         quantity:item.quantity
  }))
@@ -38,23 +48,33 @@ const placeOrder = async(req,res) =>{
         product_data:{ 
             name:"Delevery charges"
         },
-        unit_amount:2 *100
+        unit_amount:req.body.deliverFee *100
     },
     quantity:1
   })
-  const session = await stripe.checkout.sessions.create({
-    line_items:line_items,
-    mode:"payment",
-    success_url:`${frontend_url}/verify?success=true&orderId=${newOrder._id}`,
-    cancel_url:`${frontend_url}/verify?success=false&orderId=${newOrder._id}`,
-  })
-  res.json({success:true,session_url:session.url})
+
+  if(paymentMethod==='Online Payment'){
+    const session = await stripe.checkout.sessions.create({
+      line_items:line_items,
+  
+      mode:"payment",
+      success_url:`${frontend_url}/verify?success=true&orderId=${newOrder._id}`,
+      cancel_url:`${frontend_url}/verify?success=false&orderId=${newOrder._id}`,
+    })
+    
+    res.json({success:true,session_url:session.url})
+  }
+ 
+  else{
+    res.json({success:true,session_url:`${frontend_url}/verify?success=true&orderId=${newOrder._id}`})
+
+
+  }
 
        
    } catch (error) {
     console.log(error);
     res.json({success:false,message:"errore"})
-    
    }
 
 }

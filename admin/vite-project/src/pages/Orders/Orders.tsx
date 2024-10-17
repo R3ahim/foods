@@ -34,6 +34,7 @@ const Orders = ({url}) => {
   useEffect(()=>{
     fetchAllOrders();
   },[])
+  console.log(orders)
   return (
     <div className="order add">
       <h3>Order Page</h3>
@@ -57,6 +58,8 @@ const Orders = ({url}) => {
                   </p>
                   <p className="order-item-name">{order.address.firstName + " " + order.address.lastName}</p>
                   <div className="order-item-address">
+                    <p>{order.date}</p>
+                    <p>{order.address.method}</p>
                     <p>{order.address.street+ " ,"}</p>
                     <p>{order.address.city+ ", " + order.address.state+ "," + order.address.country+", " + order.address.zipcode}</p>
                   </div>

@@ -6,8 +6,8 @@ import { Link } from 'react-router-dom';
 const FoodItem = ({id,name,price,image,description}) => {
 
 const {cartItems,addToCart,removeFromCart,url} = useContext(StoreContext)
-console.log(cartItems[id])
-console.log(id)
+// console.log(cartItems[id])
+// console.log(id)
 
   return (
     
@@ -27,7 +27,7 @@ console.log(id)
         <div className="food-item-info">
             <div className="food-item-name-rating">
                 <p>{name}</p>
-                <Link to={'/ordering/' +id}><img src={assets.rating_starts} alt="" /></Link>
+                <Link to={'/ordering/' +id}><img onClick={()=>localStorage.setItem('as',JSON.stringify([{}]))} src={assets.rating_starts} alt="" /></Link>
             </div>
             <p className='food-item-desc'>{description}</p>
             <p className="food-item-price">${price}</p>

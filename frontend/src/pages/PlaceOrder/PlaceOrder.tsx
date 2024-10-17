@@ -5,18 +5,35 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
 const PlaceOrder = () => {
-const {getTotalCartAmount,token,food_list,cartItems,url}= useContext(StoreContext);
+const {getTotalCartAmount,token,filterData,cartItems,url}= useContext(StoreContext);
+const stringDistance = localStorage.getItem('destence')
+const distance  = parseInt(stringDistance)
+console.log(distance)
+console.log('filterData:',filterData,'cartItem:',cartItems)
+const emailer = localStorage.getItem('email');const addreser = localStorage.getItem('locate')
+
+// example
+const [paymentMethod, setPaymentMethod] = useState('Online Payment');
+console.log(paymentMethod)
+
+const handlePaymentSelection = (event) => {
+  setPaymentMethod(event.target.value);
+};
+
+
 
 const [data,setData]= useState({
   firstName:"",
-  lastName:"",
-  email:"",
+  email:`${emailer}`,
   street:"",
+  address: `${addreser}`,
   city:"",
   state:"",
   zipcode:"",
   country:"",
-  phone:""
+  phone:"",
+  distance:distance,
+  method:paymentMethod,
 
 })
 
@@ -24,23 +41,29 @@ const onChangeHandler =(event) =>{
   const name=event.target.name;
   const value = event.target.value;
   setData(data=>({...data,[name]:value}))
-
+  
 }
 
 const placeOrder = async(event) =>{
      event.preventDefault();
      let orderItems =[];
-     food_list.map((item)=>{
-          if(cartItems[item._id]>0){
+ 
+
+     filterData.map((item)=>{
+          if(cartItems[item.itemId]>0){
             let itemInfo = item;
-            itemInfo['quantity'] = cartItems[item._id];
+            itemInfo['quantity'] = cartItems[item.itemId];
             orderItems.push(itemInfo)
+          
+        
           }
      })
      let orderData={
       address:data,
       items:orderItems,
-      amount:getTotalCartAmount()+2,
+      amount:getTotalCartAmount()+price,
+      deliverFee:price,
+
      }
      let response = await axios.post(url+"/api/order/place",orderData,{headers:{token}});
      if (response.data.success) {
@@ -53,9 +76,12 @@ const placeOrder = async(event) =>{
      } 
     }
     const navigate = useNavigate();
+    // console.log(getTotalCartAmount())
     
     useEffect(()=>{
-        if (!token) {
+
+        if (distance >10 ) {
+          // console.log(token)
         navigate("/cart")
           
         }
@@ -63,28 +89,108 @@ const placeOrder = async(event) =>{
           navigate('/cart')
         }
     },[token])
+
+    const [price, setPrice] = useState(0);
+  
+   useEffect(()=>{
+    const calculatePrice = () => {
+      const dist = parseFloat(distance); // Convert distance to a number
+    if(dist <=3){
+      setPrice(0)
+    }
+      if (dist <= 5) {
+        setPrice(5);
+      } else if (dist > 5 && dist <= 7) {
+        setPrice(8);
+      } else if (dist > 7 && dist <= 10) {
+        setPrice(14);
+      } 
+      else if (dist > 10 ) {
+        setPrice(18);
+      }
+      else {
+        setPrice('Distance out of range');
+      }
+    }
+    calculatePrice(); 
+   },[distance])
+    
   
 
 
   return (
     <form  onSubmit={placeOrder} className="place-order">
         <div className="place-order-left">
-          <p className="title">Delevery Information</p>
+          <p className="title">Your Contact Information</p>
           <div className="multi-fields">
-            <input required  name='firstName' onChange={onChangeHandler} value={data.firstName} type="text" placeholder='First name' />
-            <input required  name='lastName' onChange={onChangeHandler} value={data.lastName} type="text" placeholder='Last Name' />
+          <label htmlFor="exampleInputEmail1">Your Name</label>
+            <input required  name='firstName' className='input' onChange={onChangeHandler} value={data.firstName} type="text" placeholder='Your Name' />
+            {/* <input required  name='lastName' onChange={onChangeHandler} value={data.lastName} type="text" placeholder='Last Name' /> */}
           </div>
-          <input required  name='email' onChange={onChangeHandler} value={data.email} type="email"  placeholder='Email Address'/>
-          <input required  name='street' onChange={onChangeHandler} value={data.street} type="text"  placeholder='Street'/>
-          <div className="multi-fields">
+          {/* <input required  name='street' onChange={onChangeHandler} value={data.street} type="text"  placeholder='Street'/> */}
+          {/* <div className="multi-fields">
             <input  required name='city' onChange={onChangeHandler} value={data.city} type="text" placeholder='City' />
             <input required  name='state' onChange={onChangeHandler} value={data.state} type="text" placeholder='State' />
-          </div>
-          <div className="multi-fields">
+          </div> */}
+          {/* <div className="multi-fields">
             <input  required  name='zipcode' onChange={onChangeHandler} value={data.zipcode} type="text" placeholder='Zip Code' />
             <input required  name='country' onChange={onChangeHandler} value={data.country} type="text" placeholder='Country' />
-          </div>
-          <input required  name='phone' onChange={onChangeHandler} value={data.phone} type="number" placeholder='Phone number' />
+          </div> */}
+         <div className="form-group">
+    <label htmlFor="exampleInputEmail1">Email address</label>
+    <input  required className='input'  name='email' onChange={onChangeHandler} value={data.email} type="email"  placeholder='Email Address' id="exampleInputEmail1" aria-describedby="emailHelp" />
+    <small id="emailHelp" className="form-text text-muted">We'll never share your Phone with anyone else.</small>
+  </div>
+          <input required  className='input'  name='phone' onChange={onChangeHandler} value={data.phone} type="number" placeholder='Phone number' />
+      
+          {/* apyment method */}
+          <div className="container">
+      <h3>Select Payment Method</h3>
+
+      <div
+        className={`option-container ${paymentMethod === 'Cash on Card' ? 'selected' : ''}`}
+      >
+        <input
+        
+          type="radio"
+          id="cashOnCard"
+          name="paymentMethod"
+          value="Cash on Card"
+        
+            
+          onChange={handlePaymentSelection}
+        />
+        <label htmlFor="cashOnCard">Cash on Card</label>
+      </div>
+
+      <div
+        className={`option-container ${paymentMethod === 'Cash on Delivery' ? 'selected' : ''}`}
+      >
+        <input
+          type="radio"
+          id="cashOnDelivery"
+          name="paymentMethod"
+          value="Cash on Delivery"
+          onChange={handlePaymentSelection}
+        />
+        <label htmlFor="cashOnDelivery">Cash on Delivery</label>
+      </div>
+
+      <div
+        className={`option-container ${paymentMethod === 'Online Payment' ? 'selected' : ''}`}
+      >
+        <input
+          type="radio"
+          id="onlinePayment"
+          name="paymentMethod"
+          value="Online Payment"
+          onChange={handlePaymentSelection}
+        />
+        <label htmlFor="onlinePayment">Online Payment</label>
+      </div>
+
+    </div>
+
         </div>
         <div className="place-order-right">
         <div className="cart-total">
@@ -97,15 +203,30 @@ const placeOrder = async(event) =>{
                     <hr />
                     <div className="cart-total-details">
                     <p>Delivery Fee</p>
-                    <p>${getTotalCartAmount()===0?0:2}</p>
+                    {/* <p>${getTotalCartAmount()===0?0:2}</p> */}
+                    <p>{price}</p>
+                    </div>
+                    <hr />
+                    <div className="cart-total-details">
+                    <p>Extra Sauce</p>
+                    {/* <p>${getTotalCartAmount()===0?0:2}</p> */}
+                    <p>{price}</p>
+                    </div>
+                    <hr />
+                    <div className="cart-total-details">
+                    <p>Extra Meat</p>
+                    {/* <p>${getTotalCartAmount()===0?0:2}</p> */}
+                    <p>{price}</p>
                     </div>
                     <hr />
                     <div className="cart-total-details">
                         <b>Total</b>
-                        <b>${getTotalCartAmount()===0?0:getTotalCartAmount(0) +2}</b>
+                        <b>${getTotalCartAmount()===0?0:getTotalCartAmount(0) +price}</b>
                     </div>
                 </div>
-                    <button type='submit'>PROCEED TO PAYMENT</button>
+                <div className="btmer">
+                    <button type='submit' >PROCEED TO PAYMENT</button>
+                </div>
             </div>
         </div>
     </form>

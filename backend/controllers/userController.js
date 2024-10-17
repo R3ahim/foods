@@ -32,6 +32,29 @@ const loginUser = async (req,res) =>{
 const createToken = (id) =>{
     return jwt.sign({id},process.env.JWT_SECRET)
 }
+// all user geting
+const listUser = async (req,res) =>{
+    try {
+       const users = await userModel.find({});
+       res.json({succes:true,data:users})
+    } catch (error) {
+       console.log(error);
+       res.json({success:false,message:("Eroror")})
+    }
+}
+// remove user
+
+const removeUser = async(req,res)=>{
+    try{
+     const food= await userModel.findById(req.body.id)
+     await userModel.findByIdAndDelete(req.body.id);
+     res.json({succes:true,message:"user removed"})
+    }
+    catch(error){
+     console.log(error)
+     res.json({success:false,message:"Eroror"})
+    }
+}
 
 
 // register user
@@ -74,4 +97,4 @@ res.json({success:true,token})
 }
 }
 
-export {loginUser,registerUser}
+export {loginUser,registerUser,listUser,removeUser}

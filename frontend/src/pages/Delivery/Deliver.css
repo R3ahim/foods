@@ -1,0 +1,17 @@
+.widhter{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-direction: column;
+    margin: 0;
+    padding: 0;
+    gap: 20px;
+    width: 80%;
+}
+
+@media (max-width:1050px) {
+
+.widhter{
+    width: 100%;
+}
+}

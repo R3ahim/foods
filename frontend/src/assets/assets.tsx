@@ -2,14 +2,15 @@ import basket_icon from './basket_icon.png'
 import logo from './logo.png'
 import header_img from './header_img.png'
 import search_icon from './search_icon.png'
-import menu_1 from './menu_1.png'
-import menu_2 from './menu_2.png'
-import menu_3 from './menu_3.png'
+import menu_1 from './menu_2.png'
+import menu_2 from './tortila.png'
+import menu_3 from './bulka.png'
 import menu_4 from './menu_4.png'
 import menu_5 from './menu_5.png'
-import menu_6 from './menu_6.png'
+import menu_6 from './box.png'
 import menu_7 from './menu_7.png'
 import menu_8 from './menu_8.png'
+import menu_9 from './menu_1.png'
 
 import food_1 from './food_1.png'
 import food_2 from './food_2.png'
@@ -81,6 +82,12 @@ export const assets = {
     bag_icon,
     parcel_icon
 }
+
+// export const not = [
+//    orderFor:['As soon As possbile','Select time'],
+//    method:['Delevery','Personal Collection',]
+
+// ]
 export const sauceOrder = [
     {name:"Addition meat 80g",price:6,id:1},
     {name:"Extra Cheese",price:5,id:2},
@@ -100,36 +107,40 @@ export const moreExtra = [
 
 export const menu_list = [
     {
-        menu_name: "Salad",
+        menu_name: "Rollo",
         menu_image: menu_1
     },
     {
-        menu_name: "Rolls",
+        menu_name: "Tortila",
         menu_image: menu_2
     },
     {
-        menu_name: "Deserts",
+        menu_name: "Bulka",
         menu_image: menu_3
     },
     {
-        menu_name: "Sandwich",
+        menu_name: "Talarz",
         menu_image: menu_4
     },
     {
-        menu_name: "Cake",
+        menu_name: "Kapsalon",
         menu_image: menu_5
     },
     {
-        menu_name: "Pure Veg",
+        menu_name: "Box",
         menu_image: menu_6
     },
     {
-        menu_name: "Pasta",
+        menu_name: "Przekski",
         menu_image: menu_7
     },
     {
-        menu_name: "Noodles",
-        menu_image: menu_8
+        menu_name: "Salatki",
+        menu_image: menu_9
+    },
+    {
+        menu_name: "Frytki i Desery",
+        menu_image: menu_5
     }]
 
 export const food_list = [

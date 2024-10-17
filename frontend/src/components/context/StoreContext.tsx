@@ -1,11 +1,14 @@
 import axios from "axios";
 import { createContext, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 // import { food_list ,moreExtra,sauceOrder} from "../../assets/assets";
 
 export const StoreContext = createContext(null)
 const StoreContextProvider = (props) =>{
     
-    const [cartItems,setCartItems]= useState({});
+    let [cartItems,setCartItems]= useState({});
+    const navigate = useNavigate();
+    // console.log(carts,'somthijdljasldf')
     // const [extraItems,setExtraItems]= useState({});//first one
     // const [extraExItems,setExtraExItems] = useState([])//first one
 
@@ -14,86 +17,74 @@ const StoreContextProvider = (props) =>{
 //  get all extra item
 
 //    }
+// console.log(size)
+const email = localStorage.getItem('email');
+
     const url = "http://localhost:4000";
     const [token,setToken] = useState("");
     
    const [food_list,setFoodList] = useState([])
+   const [cartDatas,setCartDatas] = useState([])
+   const filterData = cartDatas.filter((e)=>e?.email === email);
 
-    const addToCart =async (itemId)=>{
+   
+    const addToCart =async (itemId,data)=>{
+        
+    
+        // console.log(data)
+   
+
         if (!cartItems[itemId]){
+            // console.log(food_list)
             setCartItems((prev)=>({...prev,[itemId]:1}))
+            //  console.log(allData,'all data wil set')   
+        
+        
         }
         else{
             setCartItems((prev)=>({...prev,[itemId]:prev[itemId] + 1}))
+            // console.log(allData,'snothi')
+
         }
         if (token) {
              await axios.post(url + '/api/cart/add',{itemId},{headers:{token}})
         }
 
     }
+   const  addToCartBtn = async(items) =>{
+    
 
-    // first one
-    // const extraBtn =async (itemId)=>{
+    if(token){
+                await axios.post(url + '/api/cart/addBtn',items,{headers:{token}})
+                // console.log(items)
 
-    //     const items = sauceOrder.find(extra => extra?.id === itemId)
+    }
 
-    //     if (!extraItems[itemId]){
-    //         setExtraItems((prev)=>({...prev,[itemId]:1}))
-    //         setExtraExItems(items)
+     //  if(!size[sizeId]|| !size[meatId] || !size[sauceId] || !cartItems[itemId]){
+    //     // setSize({size[sizeId]:sizeId,size[meatId]:meatId,size[sauceId]:sauceId})
+    //     setSize((prev)=>({...prev,[itemId]:cartItems[itemId],sizeId:sizeId,sizePrice:sizePrice,meatId:meatId,sauceId:sauceId}));
+    //     //  sizer={[itemId]:cartItems[itemId],sizeId:sizeId,sizePrice:sizePrice,meatId:meatId,sauceId:sauceId}
+    //     //  console.log(sizer)
+    //     console.log(size,'72')
+    //     await axios.post(url + '/api/cart/addBtn',items)
 
 
-    //     }
-    //     else{
-    //   if(extraItems[itemId]>0){
-    //     setExtraItems((prev)=>({...prev,[itemId]:prev[itemId] + 1}))
-    //     setExtraExItems(items)
+    //  }
+    //  else{
+    //     setSize((prev)=>({...prev,[itemId]:cartItems[itemId] +1,sizeId:sizeId,meatId:meatId,sauceId:sauceId}));
 
-    //   }
-    //     }
-    //     // if (token) {
-    //     //      await axios.post(url + '/api/cart/add',{itemId},{headers:{token}})
-    //     // }
-
+    //     console.log(size,'76')
+    //     await axios.post(url + '/api/cart/addBtn',items)
     // }
-    // // this is first one
-    // const removeFromExtra = async (itemId) =>{
-    //     setExtraItems((prev)=>({...prev,[itemId]:prev[itemId] - 1}))
-    // // if (token) {
-    // //     await axios.post(url + '/api/cart/remove',{itemId},{headers:{token}})
-    // // }
+    navigate('/cart')
+ 
+}
 
-    // }
-    // //second one
-    // const addExtraSauce =async (itemId)=>{
-    //     const items = moreExtra.find(extra => extra?.id === itemId)
-
-    //     if (!extrasuce[itemId]){
-    //         setExtraSauce((prev)=>({...prev,[itemId]:1}))
-    //         setExtraSauceItems(items)
-
-    //     }
-    //     else{
-    //         setExtraSauce((prev)=>({...prev,[itemId]:prev[itemId] + 1}))
-    //         setExtraSauceItems(items)
-
-    //     }
-    //     if (token) {
-    //         //  await axios.post(url + '/api/cart/add',{itemId},{headers:{token}})
-    //     }
-
-    // }
-    // //   seocnd one
-    // const removeExtraSauce = async (itemId) =>{
-    //    if(extrasuce[itemId]>0){
-    //     setExtraSauce((prev)=>({...prev,[itemId]:prev[itemId] - 1}))
-    //    }
-    // if (token) {
-    //     // await axios.post(url + '/api/cart/remove',{itemId},{headers:{token}})
-    // }
-
-    // }
+   
     const removeFromCart = async (itemId) =>{
+        
         setCartItems((prev)=>({...prev,[itemId]:prev[itemId] - 1}))
+
     if (token) {
         await axios.post(url + '/api/cart/remove',{itemId},{headers:{token}})
     }
@@ -101,14 +92,21 @@ const StoreContextProvider = (props) =>{
     }
    const  getTotalCartAmount = ()=>{
     let totalAmount = 0;
-    for(const item in cartItems)
+    for(const item in cartItems )
     {
-        if (cartItems[item] >0) {
-            let itemInfo = food_list.find((product)=>product._id===item)
-            totalAmount += itemInfo.price * cartItems[item];
+        if (cartItems[item] >0 ) {
+            let itemInfo = filterData.find((product)=>product.itemId===item);
+            if(itemInfo?.sizePrice == undefined){
+                console.log('someting')
+            }
+            else{
+                totalAmount += itemInfo?.sizePrice * cartItems[item] ;
+
+            }
         }
       
     }
+    console.log(totalAmount)
     return totalAmount;
    }
 
@@ -116,18 +114,23 @@ const StoreContextProvider = (props) =>{
     const response = await axios.get(url + '/api/food/list');
     setFoodList(response.data.data)
    }
+   const fetchCartData = async ()=>{
+    const response = await axios.get(url + "/api/cart/list")
+    setCartDatas(response.data.data)
+   }
     
    const loadCartData = async(token) =>{
        const response = await axios.post(url + "/api/cart/get",{},{headers:{token}});
        setCartItems(response.data.cartData)
     
    }
-
+// console.log({size},'form 117')
 
       useEffect(()=>{
-  
+
          async function loadData() {
             await fetchFoodList();
+            await fetchCartData();
             if (localStorage.getItem("token")) {
                 setToken(localStorage.getItem("token"));
                 await loadCartData(localStorage.getItem("token"))
@@ -135,6 +138,7 @@ const StoreContextProvider = (props) =>{
          }
          loadData();
       },[])
+    //   console.log(n,'n will apear hear')
 
     const contextValue= {
     food_list,
@@ -143,7 +147,7 @@ const StoreContextProvider = (props) =>{
     addToCart,
     removeFromCart,
     getTotalCartAmount,
-    url,token,setToken,
+    url,token,setToken,addToCartBtn,filterData
     
     
 

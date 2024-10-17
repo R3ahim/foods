@@ -15,7 +15,7 @@
     margin-bottom: 50px;
 
 }
-.place-order-left input{
+.place-order-left .input{
 margin-bottom: 15px;
 width: 100%;
 padding: 10px;
@@ -33,6 +33,77 @@ outline-color: tomato;
     width: 100%;
     max-width: max(40%,500px);
 }
-.place-order .cart-total button{
+.place-order .cart-total .btmer button{
     margin-top: 30px;
+}
+
+.container {
+  padding: 20px;
+  margin-bottom: 200px;
+}
+
+.option-container {
+  border: 2px solid gray;
+  border-radius: 5px;
+  padding: 10px;
+  margin: 10px 0;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  transition: border-color 0.3s ease;
+   width: 80 !important;
+}
+
+.option-container input {
+  margin-right: 10px;
+}
+
+.option-container.selected {
+  border-color: green;
+}
+
+.submit-btn {
+  margin-top: 20px;
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.submit-btn:hover {
+  background-color: #0056b3;
+}
+
+.selected-method {
+  margin-top: 20px;
+}
+
+@media (max-width:1050px) {
+    .place-order{
+        flex-direction: column-reverse;
+    }
+    .place-order .cart-total button {
+        position: relative;
+    }
+    .btmer{
+        position: fixed; /* Fix the position of the navbar */
+        bottom: 0; /* Stick it to the bottom of the viewport */
+        width: 100%; /* Full width of the viewport */
+        background-color: whitesmoke;
+        z-index: 1000;
+    }
+    .place-order .cart-total .btmer button{
+        padding: 10px 39px !important;
+        background: tomato;
+        color: white;
+        border: none;
+        border-radius: 6px;
+        font-size: 16px;
+
+        width: 100%;
+        font-weight: 600;
+    }
 }

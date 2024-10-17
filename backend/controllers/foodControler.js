@@ -15,6 +15,24 @@ const addFood = async(req,res) =>{
         price:req.body.price,
         category:req.body.category,
         image:image_filename,
+        sizes:[
+          {size:'small',price:17,id:'small'},
+          {size:'Midcore',price:24,id:'midcore'},
+          {size:'Large',price:28,id:'large'},
+        ],
+        meats:[
+          {name:'Checken Meat',price:0,id:'1'},
+          {name:'lamb meat',price:0,id:'2'},
+          {name:'Mixed meat',price:0,id:'3'},
+        ],
+        sauces:[
+          {name:'garlic Sauce',price:'0',id:'1'},
+          {name:'mild sauce',price:0,id:'2'},
+          {name:'Ketchup',price:0,id:'3'},
+          {name:'hot sauce',price:0,id:'4'},
+          {name:'BBQ sauce',price:0,id:'5'},
+          {name:'dill sauce',price:0,id:'6'},
+        ],
     })
     try {
         await food.save();
@@ -38,6 +56,7 @@ const listFood = async (req,res) =>{
         res.json({success:false,message:("Eroror")})
      }
 }
+
 const foodDetails = async(req,res)=>{
     const id = req.params.id;
 

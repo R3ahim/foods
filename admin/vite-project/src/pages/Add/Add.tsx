@@ -10,7 +10,7 @@ const Add = ({url}) => {
         name:"",
         description:"",
         price:"",
-        category:"Salad"
+        category:""
     })
     const onChangeHandler = (event)=>{
            const name = event.target.name;
@@ -32,7 +32,7 @@ const Add = ({url}) => {
                 name:"",
                 description:"",
                 price:"",
-                category:"Salad"
+                category:""
             }
             
         )
@@ -70,14 +70,15 @@ const Add = ({url}) => {
             <div className="add-category flex-col">
                 <p>Product Category</p>
                 <select onChange={onChangeHandler}name="category" id="">
-                    <option value="Salald">Salald</option>
-                    <option value="Rolls">Rolls</option>
-                    <option value="Deserts">Deserts</option>
-                    <option value="Sandwich">Sandwich</option>
-                    <option value="Cake">Cake</option>
-                    <option value="Pure Veg">Pure Veg</option>
-                    <option value="Pasta">Pasta</option>
-                    <option value="Noodles">Noodles</option>
+                    <option value="Rollo">Rollo</option>
+                    <option value="Tortila">Tortila</option>
+                    <option value="Bulka">Bulka</option>
+                    <option value="Talarz">Talarz</option>
+                    <option value="Kapsalon">Kapsalon</option>
+                    <option value="Box">Box</option>
+                    <option value="Przekaski">Przekaski</option>
+                    <option value="Salatki">Salatki</option>
+                    <option value="Frytki i Desery">Frytki i Desery</option>
                 </select>
             </div>
             <div className="add-price flex-col">

@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react'
 import './FoodDetails.css'
-import { json, Link, useParams } from 'react-router-dom'
+import { json, Link, useNavigate, useParams } from 'react-router-dom'
 import { assets,sauceOrder,moreExtra } from '../../assets/assets';
 import backButton from '../../components/Navbar/back_button.png'
 import { StoreContext } from '../context/StoreContext';
@@ -8,23 +8,24 @@ import axios from 'axios';
 
 function FoodDetails() {
   const [cartDetail,setCartDetails] = useState({}); 
-  const {url} = useContext(StoreContext)
-
+  const {url,addToCart,cartItems,removeFromCart,addToCartBtn} = useContext(StoreContext)
+  const navigate = useNavigate();
+// console.log(cartDetail)
     const {id} = useParams();
     // somthing   
-     const [addToCart,setAddTocart] = useState(1)
-
+     const [addToCarts,setAddTocarts] = useState(1);
+     const [datas,setDatas] = useState()
 // first extras will show in here
-const [extra1,setExtra1] = useState({price:2,quanity:0,name:'Addition meat 80g '})
-const [extra2,setExtra2] = useState({price:6,quanity:0,name:'Extra Cheese'});
+const [extra1,setExtra1] = useState({price:6,quanity:0,name:'Addition meat 80g '})
+const [extra2,setExtra2] = useState({price:3,quanity:0,name:'Extra Cheese'});
 const [extra3,setExtra3] = useState({price:3,quanity:0,name:'Fata Cheese'});
-const [extra4,setExtra4] = useState({price:4,quanity:0,name:'Black Olives'});
+const [extra4,setExtra4] = useState({price:3,quanity:0,name:'Black Olives'});
 const [extra5,setExtra5] = useState({price:3,quanity:0,name:'Green Olives'});
-const [extra6,setExtra6] = useState({price:2,quanity:0,name:'Jalapeno Olives'});
+const [extra6,setExtra6] = useState({price:3,quanity:0,name:'Jalapeno Olives'});
 //second extra sauce function will work here
-const [sauce1,setSauce1] = useState({price:5,quanity:0,name:'garlic sauce'})
+const [sauce1,setSauce1] = useState({price:2,quanity:0,name:'garlic sauce'})
 const [sauce2,setSauce2] = useState({price:2,quanity:0,name:'Mild sauce'});
-const [sauce3,setSauce3] = useState({price:5,quanity:0,name:'ketchup'});
+const [sauce3,setSauce3] = useState({price:2,quanity:0,name:'ketchup'});
 const [sauce4,setSauce4] = useState({price:2,quanity:0,name:'Hot sauce'});
 const [sauce5,setSauce5] = useState({price:2,quanity:0,name:'BBQ sauce'});
 const [sauce6,setSauce6] = useState({price:2,quanity:0,name:'dill sauce'});
@@ -37,13 +38,14 @@ const [sauce6,setSauce6] = useState({price:2,quanity:0,name:'dill sauce'});
     const [selectedMeat, setMeatvalue] = useState('');
     // after this somthing is missing
     const [selectedSauce, setSauceValue] = useState('');
+    // console.log(cartDetail)
 
 
 
     const url1 = url +'/api/food/fooddetails/' +id;
     const getDetailsCart = async()=>{
        const response = await axios.get( url1);
-       console.log(response.data.data)
+      //  console.log(response.data.data)
        if(response.data.success){
          setCartDetails(response.data.data);
   
@@ -51,60 +53,64 @@ const [sauce6,setSauce6] = useState({price:2,quanity:0,name:'dill sauce'});
        }
  
        else{
-         console.log('please check it again')
           
  }
      }
+    //  console.log(selectedId)j
 
 
 
 
    
 
-     useEffect(()=>{
-      getDetailsCart();
-    },[])
+   
   
     const selectedItem = cartDetail?.sizes?.find(item => item.id === selectedId);
+//  console.log(cartDetail)
 
     const extrasPrice = extra1.quanity *extra1.price + extra2.quanity *extra2.price+extra3.quanity *extra3.price+extra4.quanity *extra4.price+extra5.quanity *extra5.price+extra6.quanity *extra6.price;
     const saucePrice = sauce1.quanity *sauce1.price + sauce2.quanity *sauce2.price+sauce3.quanity *sauce3.price+sauce4.quanity *sauce4.price+sauce5.quanity *sauce5.price+sauce6.quanity *sauce6.price;
    
-    const price = (selectedItem?.price * addToCart) + extrasPrice +saucePrice;
+    const price = (selectedItem?.price * cartItems[cartDetail._id]) + extrasPrice +saucePrice;
     // const price = 29;
-
-
-
-
-
-
-
-    
-    // const date = {
-    //   a:cartDetail?.price,
-    //   b:addToCart,
-    //   c:rprice,
-    //   d:selectedItem?.price,
-    // }
-    // console.log(date)
-
+//   name:cartDetail?.name,
+// _id:cartDetail._id,
+// quantity:cartItems[cartDetail._id],
+// itemId:cartDetail?._id,
+// price:cartDetail?.price,
+// image:cartDetail?.image,
+// size:selectedItem,
+// meat:selectedMeat,
+// sauce:selectedSauce,
+// allPrice:price,
+// extra:[extra1,extra2,extra3,extra4,extra5,extra6],
+// sacues:[sauce1,sauce2,sauce3,sauce4,sauce5,sauce6]    
+const email = localStorage.getItem('email');
+const extras = [
+  extra1,
+  extra2,extra3,extra4,extra5,extra6,
+  
+];
+const extraSauce =[sauce1,sauce2,sauce3,sauce4,sauce5,sauce6]
     const data = {
-      name:cartDetail?.name,
-      itemId:cartDetail?._id,
-      price:cartDetail?.price,
-      image:cartDetail?.image,
-      size:selectedId,
-      meat:selectedMeat,
-      sauce:selectedSauce,
-      allPrice:price,
-      extra:[extra1,extra2,extra3,extra4,extra5,extra6],
-      sacues:[sauce1,sauce2,sauce3,sauce4,sauce5,sauce6]    
+      itemId:cartDetail._id,
+      email:email,
+      name:cartDetail.name,
+      sizeId :selectedId,
+      image:cartDetail.image,
+      sizePrice : selectedItem?.price,
+      meatId:selectedMeat,
+      sauceId:selectedSauce,
+      extra:extras,
+      extraSauce:extraSauce,
+ 
 
-
-
+      
+    
     }
     
 
+    // console.log(data)
 
 
 
@@ -122,15 +128,15 @@ const [sauce6,setSauce6] = useState({price:2,quanity:0,name:'dill sauce'});
   };
 
   const handleExrtraPlus = () =>{
-    const quant = addToCart + 1
-    setAddTocart(quant)
+    const quant = addToCarts + 1
+    setAddTocarts(quant)
     
       
   }
   const handleExrtraMinus = () =>{
-    const quantMinus = addToCart;
+    const quantMinus = addToCarts;
     if(quantMinus>1){
-      setAddTocart(quantMinus - 1)
+      setAddTocarts(quantMinus - 1)
     }
     
       
@@ -327,11 +333,30 @@ const [sauce6,setSauce6] = useState({price:2,quanity:0,name:'dill sauce'});
 
      }
   }
-  const handleSubmit = ()=>{
-    localStorage.setItem("rdatas",JSON.stringify([data]));
-  
+  useEffect(()=>{
+    getDetailsCart();
 
-  }
+  },[])
+// console.log(datas)
+  const handleSubmit = ()=>{
+
+    
+      setDatas(prevData => [...prevData, data]);
+    // setDatas(data,'datas')
+
+
+
+
+
+
+
+
+    // localStorage.setItem("as",JSON.stringify(datas));
+
+    }
+
+    
+
 
 // console.log(selectedItem)
 
@@ -344,12 +369,12 @@ const [sauce6,setSauce6] = useState({price:2,quanity:0,name:'dill sauce'});
 <div className="bottom-btn">
  <div className="food-item-counter-plus">
  
-   <img  onClick={handleExrtraMinus}  src={assets.remove_icon_red} alt="" />
-   <p>{addToCart}</p>
- <img onClick={handleExrtraPlus} src={assets.add_icon_green} alt="" /> 
+   <img  onClick={()=>removeFromCart(cartDetail._id)}  src={assets.remove_icon_red} alt="" />
+   <p>{cartItems[cartDetail._id]}</p>
+ <img  onClick={()=>addToCart(cartDetail._id,data)}  src={assets.add_icon_green} alt="" /> 
   </div>
  
- <button onClick={handleSubmit} className='btm-btn'>
+ <button  onClick={()=>addToCartBtn(data)}className='btm-btn'>
    Add To Cart
  </button>
 </div>
@@ -369,7 +394,7 @@ const [sauce6,setSauce6] = useState({price:2,quanity:0,name:'dill sauce'});
         </div>
         <div className="food-item-info">
             <div className="food-item-name-rating flex ">
-                <p>{cartDetail?.name}</p>
+                <p onClick={handleSubmit}>{cartDetail?.name}</p>
                 <Link to={'/ordering/' +id}>PLN {price}</Link>
             </div>
             <hr  className='hr'/>
@@ -395,6 +420,7 @@ const [sauce6,setSauce6] = useState({price:2,quanity:0,name:'dill sauce'});
  name="item"
  value={size.id}
  onChange={() => setSelectedId(size.id)}
+ required
  
  />
   <label className="form-check-label" htmlFor="flexRadioDefault1">
@@ -428,7 +454,7 @@ const [sauce6,setSauce6] = useState({price:2,quanity:0,name:'dill sauce'});
           
             <div className="radio-select">
           {/* for radio  */}
-          {/* {
+          {
   cartDetail?.meats?.map((meat)=>{
    return <div  className="form-check radio-bar" key={meat.id}>
        <div>
@@ -439,6 +465,7 @@ const [sauce6,setSauce6] = useState({price:2,quanity:0,name:'dill sauce'});
   value={meat.name}
   checked={selectedMeat === meat.name}
   onChange={handleMeatChange}
+  required
  
  />
   <label className="form-check-label" htmlFor="flexRadioDefault1">
@@ -451,7 +478,7 @@ const [sauce6,setSauce6] = useState({price:2,quanity:0,name:'dill sauce'});
 
     </div>
     })
-} */}
+}
             </div>
 
            </div>
@@ -470,7 +497,7 @@ const [sauce6,setSauce6] = useState({price:2,quanity:0,name:'dill sauce'});
           
             <div className="radio-select">
           {/* for radio  */}
-          {/* {
+          {
   cartDetail?.sauces?.map((sauce)=>{
    return <div  className="form-check radio-bar" key={sauce.id}>
        <div>
@@ -481,6 +508,7 @@ const [sauce6,setSauce6] = useState({price:2,quanity:0,name:'dill sauce'});
   value={sauce.name}
   checked={selectedSauce === sauce.name}
   onChange={handleSuceChange}
+  required
  
  />  <label className="form-check-label" htmlFor="flexRadioDefault1">
   {sauce.name}
@@ -494,7 +522,7 @@ const [sauce6,setSauce6] = useState({price:2,quanity:0,name:'dill sauce'});
     })
 }
 
-      */}
+     
 
             </div>
 
